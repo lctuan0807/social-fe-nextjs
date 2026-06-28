@@ -10,10 +10,10 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../button";
+import { Button } from "@/components/ui/button";
 
 export default function HomeSidebar() {
-  const isLoggedIn = false;
+  const isLoggedIn = true;
 
   const categories = [
     { name: "Monitors", icon: <Tv size={20} />, link: "/categories/monitors" },
@@ -76,19 +76,20 @@ export default function HomeSidebar() {
               </p>
               <p className="text-xs text-gray-400 truncate">email</p>
             </div>
+
             <Button
-              onClick={() => {}}
-              className="p-2 text-gray-400 hover:bg-gray-700 rounded-md"
+              onClick={() => console.log("Button Log Out clicked!")}
+              className="p-2 text-gray-400 hover:bg-gray-700 rounded-md cursor-pointer"
             >
               <LogOut size={20} />
             </Button>
           </div>
         ) : (
           <Button
-            onClick={() => {}}
+            onClick={() => console.log("Button Sign In clicked!")}
             className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-full text-sm cursor-pointer"
           >
-            Login
+            Sign In
           </Button>
         )}
       </div>
