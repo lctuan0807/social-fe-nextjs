@@ -1,5 +1,5 @@
-import CategoryInfoSidebar from "../components/layout/category-info.sidebar";
-import HomeSidebar from "../components/layout/home.sidebar";
+import CategoryInfoSidebar from "@/components/layout/category-info.sidebar";
+import HomeSidebar from "@/components/layout/home.sidebar";
 
 export default function RootLayout({
   children,
