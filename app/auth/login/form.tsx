@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { authenticate } from "@/app/utils/actions";
 
 const formSchema = z.object({
   username: z
@@ -33,9 +35,21 @@ const LoginForm = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data);
-  }
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
+    const { username, password } = data;
+
+    // trigger next-auth signIn
+    // await signIn("credentials", {
+    //   username,
+    //   password,
+    //   redirect: true,
+    //   callbackUrl: "/home",
+    // });
+
+    const res = await authenticate(username, password);
+    console.log("🚀 ~ onSubmit ~ signIn response:", res);
+  };
 
   return (
     <Card className="w-full sm:max-w-md">
