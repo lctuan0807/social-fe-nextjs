@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 import { authenticate } from "@/app/utils/actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -45,14 +44,7 @@ const LoginForm = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const { username, password } = data;
 
-    // trigger next-auth signIn
-    // await signIn("credentials", {
-    //   username,
-    //   password,
-    //   redirect: true,
-    //   callbackUrl: "/home",
-    // });
-
+    // call authenticate action (app/utils/actions.ts)
     const res = await authenticate(username, password);
 
     if (res?.error) {
