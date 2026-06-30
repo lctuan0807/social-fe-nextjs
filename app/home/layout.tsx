@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import CategoryInfoSidebar from "@/components/layout/category-info.sidebar";
 import HomeSidebar from "@/components/layout/home.sidebar";
 
-export default async function RootLayout({
+export default async function HomeLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

@@ -20,7 +20,7 @@ import { toast } from "sonner";
 
 const formSchema = z.object({
   id: z.number(),
-  otp: z.string().min(6, "OTP must be at least 6 characters"),
+  otp: z.string().length(6, "OTP must be 6 characters"),
 });
 
 const Verify = ({ id }: { id: number }) => {

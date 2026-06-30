@@ -39,7 +39,7 @@ export default function RootLayout({
         inter.variable,
       )}
     >
-      <body className="">
+      <body suppressHydrationWarning>
         <NextAuthWrapper>
           <main>{children}</main>
         </NextAuthWrapper>
