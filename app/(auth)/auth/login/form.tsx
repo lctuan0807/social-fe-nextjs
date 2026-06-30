@@ -16,6 +16,10 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { authenticate } from "@/app/utils/actions";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 const formSchema = z.object({
   username: z
@@ -27,6 +31,9 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,7 +43,6 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     const { username, password } = data;
 
     // trigger next-auth signIn
@@ -48,7 +54,21 @@ const LoginForm = () => {
     // });
 
     const res = await authenticate(username, password);
-    console.log("🚀 ~ onSubmit ~ signIn response:", res);
+
+    if (res?.error) {
+      toast.error("Login failed", {
+        description: res.error,
+        position: "top-right",
+      });
+
+      if (res?.code === 2) {
+        // redirect to verify
+        router.push("/verify");
+      }
+    } else {
+      // redirect to home
+      router.push("/home");
+    }
   };
 
   return (
@@ -85,14 +105,32 @@ const LoginForm = () => {
                   <FieldLabel htmlFor="form-rhf-demo-password">
                     Password*
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    id="form-rhf-demo-password"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Enter your password"
-                    type="password"
-                    autoComplete="new-password"
-                  />
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      id="form-rhf-demo-password"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Enter your password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="password"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" aria-hidden="true" />
+                      ) : (
+                        <Eye className="h-4 w-4" aria-hidden="true" />
+                      )}
+                      <span className="sr-only">
+                        {showPassword ? "Hide password" : "Show password"}
+                      </span>
+                    </Button>
+                  </div>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
