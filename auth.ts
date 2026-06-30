@@ -1,8 +1,11 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { InactiveUserError, InvalidEmailPasswordError } from "./utils/errors";
-import { sendRequest } from "./utils/api";
-import { IUser } from "./types/next-auth";
+import {
+  InactiveUserError,
+  InvalidEmailPasswordError,
+} from "./app/utils/errors";
+import { sendRequest } from "./app/utils/api";
+import { IUser } from "./app/types/next-auth";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [

@@ -16,7 +16,6 @@ import { useSession } from "next-auth/react";
 export default function HomeSidebar() {
   const isLoggedIn = true;
   const { data: session, status } = useSession();
-  console.log("Console Logging ~~ ~ HomeSidebar ~ session:", session);
 
   const categories = [
     { name: "Monitors", icon: <Tv size={20} />, link: "/categories/monitors" },
