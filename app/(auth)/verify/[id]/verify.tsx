@@ -17,6 +17,11 @@ import Link from "next/link";
 import { sendRequest } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 const formSchema = z.object({
   id: z.number(),
@@ -40,7 +45,6 @@ const Verify = ({ id }: { id: number }) => {
       url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify`,
       body: { id, otp: data.otp },
     });
-
     if (res?.data) {
       toast.success("Verification successful", {
         description: "Your account has been verified",
@@ -58,17 +62,17 @@ const Verify = ({ id }: { id: number }) => {
   return (
     <Card className="w-full sm:max-w-md">
       <CardContent>
-        <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="verify-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
               name="id"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} hidden>
-                  <FieldLabel htmlFor="form-rhf-demo-id">ID*</FieldLabel>
+                  <FieldLabel htmlFor="verify-form-id">ID*</FieldLabel>
                   <Input
                     {...field}
-                    id="form-rhf-demo-id"
+                    id="verify-form-id"
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
                     value={id}
@@ -82,14 +86,24 @@ const Verify = ({ id }: { id: number }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-otp">OTP*</FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor="verify-form-otp">OTP*</FieldLabel>
+                  <InputOTP
                     {...field}
-                    id="form-rhf-demo-otp"
+                    id="verify-form-otp"
+                    maxLength={6}
+                    pattern="^[0-9]+$"
+                    value={field.value}
+                    onChange={field.onChange}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Enter your OTP"
-                    autoComplete="one-time-code"
-                  />
+                    onBlur={field.onBlur}
+                    disabled={false}
+                  >
+                    <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
+                      {Array.from({ length: 6 }, (_, i) => (
+                        <InputOTPSlot key={i} index={i} />
+                      ))}
+                    </InputOTPGroup>
+                  </InputOTP>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -103,7 +117,7 @@ const Verify = ({ id }: { id: number }) => {
           <Field orientation="horizontal" className="py-4">
             <Button
               type="submit"
-              form="form-rhf-demo"
+              form="verify-form"
               className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-5 rounded-md transition-colors disabled:bg-gray-500 cursor-pointer"
             >
               Verify

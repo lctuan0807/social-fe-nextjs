@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import ReactiveModal from "@/components/auth/reactive.modal";
 
 const formSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address"),
@@ -28,6 +29,8 @@ const formSchema = z.object({
 const LoginForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isReactiveModalOpen, setIsReactiveModalOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,15 +47,16 @@ const LoginForm = () => {
     const res = await authenticate(email, password);
 
     if (res?.error) {
+      if (res?.code === 2) {
+        setIsReactiveModalOpen(true);
+        setUserEmail(email);
+        return;
+      }
+
       toast.error("Login failed", {
         description: res.error,
         position: "top-right",
       });
-
-      if (res?.code === 2) {
-        // redirect to verify
-        router.push("/verify");
-      }
     } else {
       toast.success("Login successful");
       // redirect to home
@@ -61,97 +65,104 @@ const LoginForm = () => {
   };
 
   return (
-    <Card className="w-full sm:max-w-md">
-      <CardContent>
-        <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-          <FieldGroup>
-            <Controller
-              name="email"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-email">Email*</FieldLabel>
-                  <Input
-                    {...field}
-                    id="form-rhf-demo-email"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Enter your email"
-                    autoComplete="off"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="password"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-password">
-                    Password*
-                  </FieldLabel>
-                  <div className="relative">
+    <>
+      <Card className="w-full sm:max-w-md">
+        <CardContent>
+          <form id="form-login" onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="form-login-email">Email*</FieldLabel>
                     <Input
                       {...field}
-                      id="form-rhf-demo-password"
+                      id="form-login-email"
                       aria-invalid={fieldState.invalid}
-                      placeholder="Enter your password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="password"
+                      placeholder="Enter your email"
+                      autoComplete="off"
                     />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-full w-10 text-muted-foreground hover:bg-transparent"
-                      onClick={() => setShowPassword((prev) => !prev)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" aria-hidden="true" />
-                      ) : (
-                        <Eye className="h-4 w-4" aria-hidden="true" />
-                      )}
-                      <span className="sr-only">
-                        {showPassword ? "Hide password" : "Show password"}
-                      </span>
-                    </Button>
-                  </div>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-        </form>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="form-login-password">
+                      Password*
+                    </FieldLabel>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        id="form-login-password"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Enter your password"
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="password"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <Eye className="h-4 w-4" aria-hidden="true" />
+                        )}
+                        <span className="sr-only">
+                          {showPassword ? "Hide password" : "Show password"}
+                        </span>
+                      </Button>
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </form>
 
-        <FieldGroup>
-          <Field orientation="horizontal" className="py-4">
-            <Button
-              type="submit"
-              form="form-rhf-demo"
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-5 rounded-md transition-colors disabled:bg-gray-500 cursor-pointer"
+          <FieldGroup>
+            <Field orientation="horizontal" className="py-4">
+              <Button
+                type="submit"
+                form="form-login"
+                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-5 rounded-md transition-colors disabled:bg-gray-500 cursor-pointer"
+              >
+                Sign In
+              </Button>
+            </Field>
+          </FieldGroup>
+        </CardContent>
+        <Field className="border-t border-gray-200"></Field>
+        <CardFooter>
+          <Field className="text-center text-sm inline">
+            Don't have an account?{" "}
+            <Link
+              href="/auth/register"
+              className="font-medium text-indigo-400 hover:text-indigo-300"
             >
-              Sign In
-            </Button>
+              Sign up
+            </Link>
           </Field>
-        </FieldGroup>
-      </CardContent>
-      <Field className="border-t border-gray-200"></Field>
-      <CardFooter>
-        <Field className="text-center text-sm inline">
-          Don't have an account?{" "}
-          <Link
-            href="/auth/register"
-            className="font-medium text-indigo-400 hover:text-indigo-300"
-          >
-            Sign up
-          </Link>
-        </Field>
-      </CardFooter>
-    </Card>
+        </CardFooter>
+      </Card>
+      <ReactiveModal
+        open={isReactiveModalOpen}
+        onOpenChange={() => setIsReactiveModalOpen(false)}
+        userEmail={userEmail}
+      />
+    </>
   );
 };
 
