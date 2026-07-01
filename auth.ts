@@ -10,10 +10,7 @@ import { IUser } from "./app/types/next-auth";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
-      credentials: {
-        username: {},
-        password: {},
-      },
+      credentials: {},
       authorize: async (credentials) => {
         const resp = await sendRequest<IBackendResponse<ILogin>>({
           method: "POST",
@@ -54,6 +51,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
     authorized: async ({ auth }) => {
+      console.log("Console Logging ~~ ~ auth:", auth);
+
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },
