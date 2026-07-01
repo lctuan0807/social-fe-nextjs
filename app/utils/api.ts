@@ -49,7 +49,10 @@ export const sendRequest = async <T>(props: IRequest) => {
     url = `${url}?${queryString.stringify(queryParams)}`;
   }
 
+  console.log("Console Logging ~~ ~ sendRequest ~ options:", options);
+  console.log("Console Logging ~~ ~ sendRequest ~ url:", url);
   return fetch(url, options).then((res) => {
+    console.log("Console Logging ~~ ~ sendRequest ~ res:", res);
     if (res.ok) {
       return res.json() as T; //generic
     } else {

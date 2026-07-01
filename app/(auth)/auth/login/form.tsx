@@ -21,11 +21,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 const formSchema = z.object({
-  username: z
-    .string()
-    .trim()
-    .min(3, "Username must be at least 3 characters")
-    .max(100, "Username must be at most 100 characters"),
+  email: z.string().trim().email("Please enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -36,16 +32,16 @@ const LoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const { username, password } = data;
+    const { email, password } = data;
 
     // call authenticate action (app/utils/actions.ts)
-    const res = await authenticate(username, password);
+    const res = await authenticate(email, password);
 
     if (res?.error) {
       toast.error("Login failed", {
@@ -58,6 +54,7 @@ const LoginForm = () => {
         router.push("/verify");
       }
     } else {
+      toast.success("Login successful");
       // redirect to home
       router.push("/home");
     }
@@ -69,18 +66,16 @@ const LoginForm = () => {
         <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
-              name="username"
+              name="email"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-username">
-                    Username*
-                  </FieldLabel>
+                  <FieldLabel htmlFor="form-rhf-demo-email">Email*</FieldLabel>
                   <Input
                     {...field}
-                    id="form-rhf-demo-username"
+                    id="form-rhf-demo-email"
                     aria-invalid={fieldState.invalid}
-                    placeholder="Enter your username"
+                    placeholder="Enter your email"
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
