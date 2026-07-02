@@ -61,19 +61,19 @@ const RegisterForm = () => {
   return (
     <Card className="w-full sm:max-w-md">
       <CardContent>
-        <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
               name="username"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-username">
+                  <FieldLabel htmlFor="register-form-username">
                     Username*
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="form-rhf-demo-username"
+                    id="register-form-username"
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your username"
                     autoComplete="off"
@@ -89,10 +89,10 @@ const RegisterForm = () => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-email">Email*</FieldLabel>
+                  <FieldLabel htmlFor="register-form-email">Email*</FieldLabel>
                   <Input
                     {...field}
-                    id="form-rhf-demo-email"
+                    id="register-form-email"
                     aria-invalid={fieldState.invalid}
                     placeholder="user@example.com"
                     autoComplete="off"
@@ -108,12 +108,12 @@ const RegisterForm = () => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-password">
+                  <FieldLabel htmlFor="register-form-password">
                     Password*
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="form-rhf-demo-password"
+                    id="register-form-password"
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your password"
                     type="password"
@@ -132,7 +132,7 @@ const RegisterForm = () => {
           <Field orientation="horizontal" className="py-4">
             <Button
               type="submit"
-              form="form-rhf-demo"
+              form="register-form"
               className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-5 rounded-md transition-colors disabled:bg-gray-500 cursor-pointer"
             >
               Register
